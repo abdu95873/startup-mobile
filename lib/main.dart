@@ -1,12 +1,19 @@
 import "dart:convert";
 
+import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:http/http.dart" as http;
 import "package:mobile_scanner/mobile_scanner.dart";
 import "package:permission_handler/permission_handler.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
-const String _apiBaseUrl = "http://10.0.2.2:5000";
+String get _apiBaseUrl {
+  if (kIsWeb) return "http://localhost:5000";
+  if (defaultTargetPlatform == TargetPlatform.android) {
+    return "http://10.0.2.2:5000";
+  }
+  return "http://localhost:5000";
+}
 const String _cameraAskedKey = "camera_permission_asked";
 const String _tokenKey = "app_jwt_token";
 const String _emailKey = "app_user_email";
@@ -729,8 +736,8 @@ class SettingsScreen extends StatelessWidget {
       appBar: AppBar(title: const Text("Settings")),
       body: ListView(
         children: [
-          const ListTile(
-            title: Text("API Base URL"),
+          ListTile(
+            title: const Text("API Base URL"),
             subtitle: Text(_apiBaseUrl),
           ),
           ListTile(
